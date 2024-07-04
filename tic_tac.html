@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+          body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            
+        }
+        #rst-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: red;
+            color: #fff;
+            border-radius: 5px;
+        }
+         .board{
+            display: grid;
+            grid-template-columns: repeat(3,100px);
+            grid-template-rows: repeat(3,100px);
+            gap: 5px;
+         }
+        .box {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #fff;
+            border: 2px solid #000;
+            font-size: 50px
+            
+        }
+        .disabled {
+            pointer-events: none; /* Disable pointer events */
+           
+        }
+        #p{
+            color:green;
+            font-size: 2rem;
+        }
+        .box:hover{
+            background-color: #e8dcdc;
+        }
+    </style>
+</head>
+<body>
+    <h2>Tic-Tac-Toe</h2>
+    <div class="board">
+        <div class="box" id="cell0"></div>
+        <div class="box" id="cell1"></div>
+        <div class="box" id="cell2"></div>
+        <div class="box" id="cell3"></div>
+        <div class="box" id="cell4"></div>
+        <div class="box" id="cell5"></div>
+        <div class="box" id="cell6"></div>
+        <div class="box" id="cell7"></div>
+        <div class="box" id="cell8"></div>
+    </div>
+    <div class="reset">
+        <button id="rst-btn">Reset</button>
+    </div>
+    <p id="p"></p>
+        <script>
+            let curr_value='x';
+            let winningPlayer = '';
+
+            const boxes=document.querySelectorAll(".box");
+            boxes.forEach(box=>{   
+            box.addEventListener("click",()=>{
+                box.textContent=curr_value;
+                curr_value=curr_value=='x'?'o':'x';
+                box.classList.add('disabled'); 
+                check_winner()
+            });
+           });
+
+            const reset_btn=document.querySelector('#rst-btn');
+            reset_btn.addEventListener("click",()=>{
+                boxes.forEach(box=>{
+                    box.textContent="";
+                    box.classList.remove('disabled');
+                    document.querySelector('#p').textContent="";
+                });
+                curr_value='x'
+            });
+            
+        function check_winner(){
+           const wincombo=[
+                [0,1,2],[3,4,5],[6,7,8],
+                [0,3,6],[1,4,7],[2,5,8],
+                [0,4,8],[2,4,6]
+            ];
+            let win=false;
+            
+            wincombo.forEach(combo=>{
+                const[a,b,c]=combo;
+                let content_a=boxes[a].textContent;
+                let content_b=boxes[b].textContent;
+                let content_c=boxes[c].textContent;
+
+                if(content_a && content_a==content_b && content_a==content_c){
+                    
+                    win=true;
+                    winningPlayer = content_a;
+                }  
+            });
+            
+        // Check for a draw only if there is no winner
+        if (win) {
+        success(winningPlayer);
+        } else {
+            // Check for a draw only if there is no winner
+            let allFilled = true;
+            boxes.forEach(box => {
+                if (box.textContent === "") {
+                    allFilled = false;
+                }
+            });
+
+        if (allFilled) {
+            document.querySelector('#p').textContent = "It's a draw!";
+        }
+    }
+}    
+function success(winningPlayer) {
+    document.querySelector('#p').textContent = `${winningPlayer} wins`;
+    // Disable all boxes to prevent further moves after win
+    boxes.forEach(box => {
+        box.classList.add('disabled');
+    });
+}
+
+        </script>
+</body>
+</html>
